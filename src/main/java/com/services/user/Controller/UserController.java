@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService service;
-    @PostMapping("/add")
+    @PostMapping("/")
     public User addUser(@RequestBody User user) {
         return service.addUser(user);
     }
-    @PostMapping("/update")
+    @PutMapping("/")
     public User updateUser(@RequestBody User user){
        return service.updateUser(user);
     }
-    @DeleteMapping("/delete")
+    @DeleteMapping("/")
     public void deleteUser(@RequestBody User user){
         service.deleteUSer(user);
     }
