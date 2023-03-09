@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void signUpUser(User user) {
+//        this needs to be like private Bcrypt bCrypt, do not call directly
         final String encryptedPassword = BCryptPasswordEncoder.encode(user.getPassword());
 
         user.setPassword(encryptedPassword);
