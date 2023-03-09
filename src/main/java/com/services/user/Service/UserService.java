@@ -1,5 +1,6 @@
 package com.services.user.Service;
 
+import com.services.user.Entity.ConfirmationToken;
 import com.services.user.Entity.User;
 
 public interface UserService {
@@ -7,6 +8,8 @@ public interface UserService {
     User updateUser(User user);
     void deleteUSer(User user);
     void signUpUser(User user);
-    User loginUser(User user);
 
+    void confirmUser(ConfirmationToken confirmationToken);
+
+    void sendConfirmationMail(String userMail, String token);
 }

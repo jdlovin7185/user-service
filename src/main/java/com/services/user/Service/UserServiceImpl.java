@@ -5,6 +5,7 @@ import com.services.user.Entity.User;
 import com.services.user.Repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepository repository;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private EmailService emailService;
 
     private ConfirmationTokenService service;
     @Override
@@ -37,8 +42,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void signUpUser(User user) {
-//        this needs to be like private Bcrypt bCrypt, do not call directly
-        final String encryptedPassword = BCryptPasswordEncoder.encode(user.getPassword());
+
+        final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         user.setPassword(encryptedPassword);
 
@@ -48,13 +53,31 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         service.saveConfirmationToken(confirmationToken);
     }
-
     @Override
-    public User loginUser(User user) {
-        return null;
+    public void confirmUser(ConfirmationToken confirmationToken) {
+        final User user = confirmationToken.getUser();
+
+        user.setEnabled(true);
+
+        repository.save(user);
+
+        service.deleteConfirmationToken(confirmationToken.getId());
     }
 
-//    Below is the implemented UserDetailService
+    @Override
+    public void sendConfirmationMail(String userMail, String token) {
+        final SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(userMail);
+        mailMessage.setSubject("Mail Confirmation Link!");
+        mailMessage.setFrom("emailnotalk@gmail.com");
+        mailMessage.setText(
+                "Thank you for registering. Please click on the below link to active your account."
+                + "http://localhost:8080/sing-up/confirm?token=" + token
+        );
+        emailService.sendEmail(mailMessage);
+    }
+
+    //    Below is the implemented UserDetailService
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 //        Optional is a class where it can contain a non-null
