@@ -8,45 +8,35 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @AllArgsConstructor
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebSecurityConfigurer<WebSecurity> {
 
     private final UserService userService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                .requestMatchers("/sign-up/", "/sign-in")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/sign-in")
-                .permitAll();
-        return http.build();
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .anyRequest("/css/**", "/js/**", "/images/**", "/", "/home", "/about")
+
     }
 
-    @Bean
-   public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    @Override
+    public void init(WebSecurity builder) throws Exception {
+
     }
 
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService)
-//                .passwordEncoder(bCryptPasswordEncoder);
-//    }
+    @Override
+    public void configure(WebSecurity builder) throws Exception {
+
+    }
 }
