@@ -5,6 +5,8 @@ import com.services.user.Repository.ConfirmationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class ConfirmationTokenService {
@@ -17,6 +19,10 @@ public class ConfirmationTokenService {
 
     void saveConfirmationToken(ConfirmationToken confirmationToken) {
         repository.save(confirmationToken);
+    }
+
+    public Optional<ConfirmationToken> findConfirmationTokenByToken(String token) {
+        return repository.findConfirmationTokenByToken(token);
     }
 
 }

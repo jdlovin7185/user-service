@@ -3,7 +3,6 @@ package com.services.user.Service;
 import com.services.user.Entity.ConfirmationToken;
 import com.services.user.Entity.User;
 import com.services.user.Repository.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
