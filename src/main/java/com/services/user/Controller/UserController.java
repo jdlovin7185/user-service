@@ -13,13 +13,14 @@ import java.util.Optional;
 
 @Controller
 @RestController
-@AllArgsConstructor
+//@AllArgsConstructor
 @RequestMapping("api/user")
 public class UserController {
     @Autowired
     private UserServiceImpl service;
 
-    private final ConfirmationTokenService confirmationToken;
+    @Autowired
+    private ConfirmationTokenService confirmationToken;
 
     @PostMapping("/")
     public User addUser(@RequestBody User user) {
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/sign-up")
-    String signUn() {
+    String signOn() {
         return "sign-up";
     }
 
@@ -60,8 +61,8 @@ public class UserController {
     String confirmEmail(@RequestParam("token") String token) {
         Optional<ConfirmationToken> optionalConfirmationToken = confirmationToken.findConfirmationTokenByToken(token);
 
-        optionalConfirmationToken.isPresent(service::confirmUser);
+        optionalConfirmationToken.isPresent();
 
-        return "/sign-in";
+        return "redirect:/sign-in";
     }
 }
