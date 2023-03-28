@@ -1,15 +1,16 @@
 package com.services.user.config;
 
-import com.services.user.Service.UserService;
+import com.services.user.Service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -17,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 public class WebSecurityConfig {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -44,9 +45,9 @@ public class WebSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService)
-//                .passwordEncoder(bCryptPasswordEncoder);
-//    }
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService)
+                .passwordEncoder(bCryptPasswordEncoder);
+    }
 }
